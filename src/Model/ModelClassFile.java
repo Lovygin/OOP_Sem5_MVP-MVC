@@ -35,7 +35,6 @@ public class ModelClassFile extends Model implements iGetModel {
      * Метод делает копию списка для поиска и других действий со студентами.
      * @param students
      */
-
     public void saveAllStudentToFile(List<Student> students) {
         this.studentList = students;
         try (FileWriter fw = new FileWriter(fileName, true)) {

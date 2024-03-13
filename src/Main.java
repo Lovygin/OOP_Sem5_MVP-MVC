@@ -38,7 +38,7 @@ public class Main {
         ModelClassFile fmClass = new ModelClassFile("StudentDB.csv"); // База данных студентов в виде файла
         //fmClass.saveAllStudentToFile(studentsForModelFile); // Сохранили список первой группы студентов в файл
 
-        fmClass.addAllStudents(studentsForModelFile); // Добавляем список студентов в класс с файловым способом хранением хранения данных
+        fmClass.addAllStudents(studentsForModelFile); // Добавляем список студентов в класс с файловым способом хранением данных
                                                       // без повторного сохранения в файл
 
 

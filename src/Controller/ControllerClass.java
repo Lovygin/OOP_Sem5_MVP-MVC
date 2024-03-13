@@ -60,6 +60,38 @@ public class ControllerClass {
         return students.size() > 0;
     }
 
+    private void getListOfAllStudents() {
+        //view.printAllStudents(model.getAllStudents()); // Выводим данные из одной изначально объявленной модели
+        for (Model currentModel : models) { // Выводим списки из всех моделей
+            this.model = (iGetModel) currentModel;
+            view.printAllStudents(model.getAllStudents());
+        }
+    }
+
+    private boolean studentRemoving(String messageAboutIdTyping, String messageAboutSuccessfullyRemoving
+            , String messageAboutDeleteError, String messageStudentNotFound) {
+        boolean studentFound = false;
+        Integer idOfStudentForRemoving = view.promptForInt(messageAboutIdTyping);
+        for (Model currentModel : models) { // Ищем студента во всех имеющихся моделях
+                                            // Не написал запрос "Хочет ли пользователь искать в других моделях?"
+            this.model = (iGetModel) currentModel;
+            Student studentToDelete = model.studentSearch(idOfStudentForRemoving);
+            if (studentToDelete != null) {
+                if (model.studentDeleting(studentToDelete)) { // При успешном удалении метод возвращает true
+                    System.out.println(messageAboutSuccessfullyRemoving);
+                    studentFound = true;
+                    break;
+                } else {
+                    System.out.println(messageAboutDeleteError); // При удалении студента произошла ошибка
+                }
+            }
+        }
+        if (!studentFound) {
+            System.out.println(messageStudentNotFound);
+        }
+        return studentFound;
+    }
+
     /**
      * Основной фнкцилнал программы, основанный на выборе действия с моделями, хранящими списки студентов.
      * С русскими и английскими командами.
@@ -79,61 +111,23 @@ public class ControllerClass {
                     System.out.println("Exit the program");
                     break;
                 case LIST:
-                    //view.printAllStudents(model.getAllStudents()); // Выводим данные из одной изначально объявленной модели
-                    for (Model currentModel : models) { // Выводим списки из всех моделей
-                        this.model = (iGetModel) currentModel;
-                        view.printAllStudents(model.getAllStudents());
-                    }
+                    getListOfAllStudents();
                     break;
                 case DELETE: //Удаление
-                    boolean studentFound = false;
-                    Integer idOfStudentForRemoving = view.promptForInt("Type the id number of the student --> ");
-                    for (Model currentModel : models) { // Ищем студента во всех имеющихся моделях
-                                                        // Не написал запрос "Хочет ли пользователь искать в других моделях?"
-                        this.model = (iGetModel) currentModel;
-                        Student studentToDelete = model.studentSearch(idOfStudentForRemoving);
-                        if (studentToDelete != null) {
-                            if (model.studentDeleting(studentToDelete)) { // При успешном удалении метод возвращает true
-                                System.out.println("Removal of a student from the list has been successfully completed");
-                                studentFound = true;
-                                break;
-                            } else {
-                                System.out.println("Error occurred while deleting the student"); // При удалении студента произошла ошибка
-                                break;
-                            }
-                        }
-                    }
-                    if (!studentFound) {
-                        System.out.println("This student was not found. He/She cannot be deleted");
-                        break;
-                    }
+                    studentRemoving("Type the id number of the student --> "
+                            , "Removal of a student from the list has been successfully completed"
+                            , "Error occurred while deleting the student"
+                            , "This student was not found. He/She cannot be deleted");
                     break;
                 case СПИСОК:
-                    for (Model currentModel : models) {
-                        this.model = (iGetModel) currentModel;
-                        view.printAllStudents(model.getAllStudents());
-                    }
+                    getListOfAllStudents();
                     break;
                 case УДАЛИТЬ:
-                    studentFound = false;
-                    idOfStudentForRemoving = view.promptForInt("Введите индивидуальный номер студента --> ");
-                    for (Model currentModel : models) {
-                        this.model = (iGetModel) currentModel;
-                        Student studentToDelete = model.studentSearch(idOfStudentForRemoving);
-                        if (studentToDelete != null) {
-                            if (model.studentDeleting(studentToDelete)) {
-                                System.out.println("Удаление студента из списка студентов успешно завершено");
-                                studentFound = true;
-                                break;
-                            } else {
-                                System.out.println("В процессе удаления студента произошла ошибка");
-                            }
-
-                        }
-                    }
-                    if (!studentFound) {
-                        System.out.println("Студент не найден. Он/Она не может быть удален(а).");
-                    }
+                    studentRemoving("Введите индивидуальный номер студента --> "
+                            , "Удаление студента из списка студентов успешно завершено"
+                            , "В процессе удаления студента произошла ошибка"
+                            , "Студент не найден. Он/Она не может быть удален(а).");
+                    break;
                 case ВЫХОД:
                     getNewIteration = false;
                     System.out.println("Выход из программы");
